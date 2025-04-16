@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic Calculators</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">Calc-Daddy</a>
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.path == '/' else '' }}" href="/">Basic</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.path == '/page2' else '' }}" href="/page2">Health</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.path == '/page3' else '' }}" href="/page3">Finance</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+    <div class="container mt-4">
+
+    <!-- Arithmetic Calculator Card -->
+    <div class="card shadow mb-4 rounded-3">
+        <div class="card-body">
+        <h3 class="card-title">Arithmetic Calculator</h3>
+        <form onsubmit="event.preventDefault(); calculateArithmetic();">
+            <input type="number" id="num1" placeholder="Number 1" class="form-control mb-2">
+            <select id="operator" class="form-select mb-2">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+            </select>
+            <input type="number" id="num2" placeholder="Number 2" class="form-control mb-2">
+            <button type="submit" class="btn btn-primary">Calculate</button>
+        </form>
+        <p class="mt-2" id="result1"></p>
+        </div>
+    </div>
+    
+    <!-- Repeat the same card structure for Percentage Calculator -->
+    <div class="card shadow mb-4 rounded-3">
+        <div class="card-body">
+        <h3 class="card-title">Percentage Calculator</h3>
+        <form onsubmit="event.preventDefault(); calculatePercentage();">
+            <input type="number" id="percent-value" placeholder="What is" class="form-control mb-2">
+            <input type="number" id="percent-base" placeholder="% of base number" class="form-control mb-2">
+            <button type="submit" class="btn btn-primary">Calculate</button>
+        </form>
+        <p class="mt-2" id="result2"></p>
+        </div>
+    </div>
+    
+    <!-- Unit Converter Card -->
+    <div class="card shadow mb-4 rounded-3">
+        <div class="card-body">
+        <h3 class="card-title">Inch to Centimeter Converter</h3>
+        <form onsubmit="event.preventDefault(); convertInches();">
+            <input type="number" id="inches" placeholder="Inches" class="form-control mb-2">
+            <button type="submit" class="btn btn-primary">Convert</button>
+        </form>
+        <p class="mt-2" id="result3"></p>
+        </div>
+    </div>
+    
+    </div>
+
+    <script>
+        function calculateArithmetic() {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const num2 = parseFloat(document.getElementById('num2').value);
+            const operator = document.getElementById('operator').value;
+            let result;
+            if (operator === '+') result = num1 + num2;
+            else if (operator === '-') result = num1 - num2;
+            else if (operator === '*') result = num1 * num2;
+            else if (operator === '/') result = num2 !== 0 ? num1 / num2 : 'Error: Divide by zero';
+            document.getElementById('result1').innerText = `Result: ${result}`;
+        }
+
+        function calculatePercentage() {
+        const value = parseFloat(document.getElementById('percent-value').value);
+        const base = parseFloat(document.getElementById('percent-base').value);
+        const result = (value / 100) * base;
+        document.getElementById('result2').innerText = `Result: ${result}`;
+        }
+
+        function convertInches() {
+        const inches = parseFloat(document.getElementById('inches').value);
+        const cm = inches * 2.54;
+        document.getElementById('result3').innerText = `Result: ${cm} cm`;
+        }
+    </script>
+
+    <footer class="bg-dark text-light text-center py-3 mt-5 border-top">
+        <div class="container">
+            <small>
+            Created by <strong>Jordan Kelley</strong> · Version 1.0 · April 2025 · 
+            <a href="https://github.com/your-username/your-repo" class="text-info text-decoration-none" target="_blank">
+                Open Source on GitHub
+            </a>
+            </small>
+        </div>
+    </footer>   
+</body>
+</html>

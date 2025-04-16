@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Basic Calculators</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="p-4">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Calc-Daddy</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if request.path == '/' else '' }}" href="/">Basic</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if request.path == '/page2' else '' }}" href="/page2">Health</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ 'active' if request.path == '/page3' else '' }}" href="/page3">Finance</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="d-flex justify-content-end align-items-center mb-4">
+        <label for="currency" class="me-2">Currency:</label>
+        <select id="currency" class="form-select w-auto" onchange="updateCurrencySymbol()">
+            <option value="USD" selected>USD ($)</option>
+            <option value="MXN">MXN (MX$)</option>
+            <option value="PHP">PHP (₱)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="EUR">EUR (€)</option>
+        </select>
+    </div>
+
+    <script>
+        let currencySymbol = "$";
+        
+        const currencySymbols = {
+          USD: "$",
+          MXN: "MX$",
+          PHP: "₱",
+          GBP: "£",
+          EUR: "€"
+        };
+        
+        function updateCurrencySymbol() {
+          const selected = document.getElementById("currency").value;
+          currencySymbol = currencySymbols[selected];
+        
+          document.querySelectorAll(".currency").forEach(el => {
+            el.innerText = currencySymbol;
+          });
+        }
+    </script>
+
+
+    <div clss="container mt-4">
+        <div class="card shadow mb-4 rounded-3">
+            <div class="card-body">
+                <h3 class="card-title">Loan Payment Calculator</h3>
+                <form onsubmit="event.preventDefault(); calculateLoan();">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text currency">$</span>
+                        <input type="number" id="loan-amount" class="form-control" placeholder="Loan Amount">
+                    </div>
+                    <input type="number" id="interest-rate" class="form-control mb-2" placeholder="Annual Interest Rate (%)">
+                    <input type="number" id="loan-term" class="form-control mb-2" placeholder="Loan Term (years)">
+                    <button type="submit" class="btn btn-primary">Calculate</button>
+                </form>
+                <p class="mt-2" id="loan-result"></p>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4 rounded-3">
+            <div class="card-body">
+                <h3 class="card-title">Tip Calculator</h3>
+                <form onsubmit="event.preventDefault(); calculateTip();">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text currency">$</span>
+                        <input type="number" id="bill-amount" class="form-control" placeholder="Bill Total">
+                    </div>
+                    <input type="number" id="tip-percent" class="form-control mb-2" placeholder="Tip %">
+                    <button type="submit" class="btn btn-primary">Calculate</button>
+                </form>
+                <p class="mt-2" id="tip-result"></p>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4 rounded-3">
+            <div class="card-body">
+                <h3 class="card-title">Compound Interest Calculator</h3>
+                <form onsubmit="event.preventDefault(); calculateCompound();">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text currency">$</span>
+                        <input type="number" id="principal" class="form-control" placeholder="Principal Amount">
+                    </div>
+                    <input type="number" id="compound-rate" class="form-control mb-2" placeholder="Annual Interest Rate (%)">
+                    <input type="number" id="compound-years" class="form-control mb-2" placeholder="Years">
+                    <input type="number" id="compound-frequency" class="form-control mb-2" placeholder="Compounds per Year">
+                    <button type="submit" class="btn btn-primary">Calculate</button>
+                </form>
+                <p class="mt-2" id="compound-result"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateLoan() {
+              const amount = parseFloat(document.getElementById('loan-amount').value);
+              const annualRate = parseFloat(document.getElementById('interest-rate').value) / 100;
+              const years = parseFloat(document.getElementById('loan-term').value);
+            
+              const monthlyRate = annualRate / 12;
+              const n = years * 12;
+            
+              const payment = (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -n));
+              document.getElementById('loan-result').innerText = 
+                `Monthly Payment: ${currencySymbol}${payment.toFixed(2)}`;
+            }
+            
+            function calculateTip() {
+              const bill = parseFloat(document.getElementById('bill-amount').value);
+              const percent = parseFloat(document.getElementById('tip-percent').value);
+              const tip = bill * (percent / 100);
+              const total = bill + tip;
+            
+              document.getElementById('tip-result').innerText = 
+                `Tip: ${currencySymbol}${tip.toFixed(2)} | Total: ${currencySymbol}${total.toFixed(2)}`;
+            }
+            
+            function calculateCompound() {
+              const principal = parseFloat(document.getElementById('principal').value);
+              const rate = parseFloat(document.getElementById('compound-rate').value) / 100;
+              const years = parseFloat(document.getElementById('compound-years').value);
+              const freq = parseFloat(document.getElementById('compound-frequency').value);
+            
+              const amount = principal * Math.pow((1 + rate / freq), freq * years);
+              document.getElementById('compound-result').innerText = 
+                `Future Value: ${currencySymbol}${amount.toFixed(2)}`;
+            }
+    </script>
+
+<footer class="bg-dark text-light text-center py-3 mt-5 border-top">
+    <div class="container">
+        <small>
+        Created by <strong>Jordan Kelley</strong> · Version 1.0 · April 2025 · 
+        <a href="https://github.com/your-username/your-repo" class="text-info text-decoration-none" target="_blank">
+            Open Source on GitHub
+        </a>
+        </small>
+    </div>
+</footer>   
+</body>
+</html>

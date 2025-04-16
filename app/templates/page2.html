@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic Calculators</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">Calc-Daddy</a>
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.path == '/' else '' }}" href="/">Basic</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.path == '/page2' else '' }}" href="/page2">Health</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.path == '/page3' else '' }}" href="/page3">Finance</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+
+      <div class="container mt-4">
+
+        <div class="d-flex justify-content-end align-items-center mb-4">
+            <label class="form-check-label me-2" for="unitSwitch">Units:</label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="unitSwitch" onchange="toggleUnits()">
+              <label class="form-check-label" id="unitLabel">Metric</label>
+            </div>
+          </div>
+          
+
+        <!-- BMI Calculator -->
+        <div class="card shadow mb-4 rounded-3">
+          <div class="card-body">
+            <h3 class="card-title">BMI Calculator</h3>
+            <form onsubmit="event.preventDefault(); calculateBMI();">
+              <input type="number" id="weight" class="form-control mb-2" placeholder="Weight (kg)">
+              <input type="number" id="height" class="form-control mb-2" placeholder="Height (cm)">
+              <button type="submit" class="btn btn-primary">Calculate</button>
+            </form>
+            <p class="mt-2" id="bmi-result"></p>
+          </div>
+        </div>
+      
+        <!-- Calorie Needs Calculator -->
+        <div class="card shadow mb-4 rounded-3">
+          <div class="card-body">
+            <h3 class="card-title">Calorie Needs (BMR)</h3>
+            <form onsubmit="event.preventDefault(); calculateBMR();">
+              <input type="number" id="bmr-weight" class="form-control mb-2" placeholder="Weight (kg)">
+              <input type="number" id="bmr-height" class="form-control mb-2" placeholder="Height (cm)">
+              <input type="number" id="bmr-age" class="form-control mb-2" placeholder="Age">
+              <select id="bmr-gender" class="form-select mb-2">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+              <button type="submit" class="btn btn-primary">Estimate</button>
+            </form>
+            <p class="mt-2" id="bmr-result"></p>
+          </div>
+        </div>
+      
+        <!-- Heart Rate Zone Calculator -->
+        <div class="card shadow mb-4 rounded-3">
+          <div class="card-body">
+            <h3 class="card-title">Target Heart Rate Zone</h3>
+            <form onsubmit="event.preventDefault(); calculateHeartRate();">
+              <input type="number" id="age" class="form-control mb-2" placeholder="Age">
+              <button type="submit" class="btn btn-primary">Calculate</button>
+            </form>
+            <p class="mt-2" id="hr-result"></p>
+          </div>
+        </div>
+      
+      </div>
+      
+
+      <script>
+        let usingMetric = true;
+        
+        function toggleUnits() {
+          usingMetric = !usingMetric;
+          document.getElementById('unitLabel').innerText = usingMetric ? "Metric" : "Imperial";
+        
+          // Update placeholders
+          document.getElementById('weight').placeholder = usingMetric ? "Weight (kg)" : "Weight (lbs)";
+          document.getElementById('height').placeholder = usingMetric ? "Height (cm)" : "Height (inches)";
+          document.getElementById('bmr-weight').placeholder = usingMetric ? "Weight (kg)" : "Weight (lbs)";
+          document.getElementById('bmr-height').placeholder = usingMetric ? "Height (cm)" : "Height (inches)";
+        }
+        
+        function calculateBMI() {
+          const weightInput = parseFloat(document.getElementById('weight').value);
+          const heightInput = parseFloat(document.getElementById('height').value);
+        
+          if (usingMetric) {
+            const heightMeters = heightInput / 100;
+            const bmi = weightInput / (heightMeters * heightMeters);
+            document.getElementById('bmi-result').innerText = `Your BMI is: ${bmi.toFixed(2)}`;
+          } else {
+            // Imperial: height in inches, weight in lbs
+            const bmi = (weightInput / (heightInput * heightInput)) * 703;
+            document.getElementById('bmi-result').innerText = `Your BMI is: ${bmi.toFixed(2)}`;
+          }
+        }
+        
+        function calculateBMR() {
+          const weightInput = parseFloat(document.getElementById('bmr-weight').value);
+          const heightInput = parseFloat(document.getElementById('bmr-height').value);
+          const age = parseInt(document.getElementById('bmr-age').value);
+          const gender = document.getElementById('bmr-gender').value;
+        
+          // Convert to metric if needed
+          const weightKg = usingMetric ? weightInput : weightInput * 0.453592;
+          const heightCm = usingMetric ? heightInput : heightInput * 2.54;
+        
+          let bmr;
+          if (gender === 'male') {
+            bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
+          } else {
+            bmr = 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
+          }
+        
+          document.getElementById('bmr-result').innerText = `Your estimated BMR is: ${Math.round(bmr)} calories/day`;
+        }
+        
+        function calculateHeartRate() {
+          const age = parseInt(document.getElementById('age').value);
+          const maxHR = 220 - age;
+          const minTarget = Math.round(maxHR * 0.5);
+          const maxTarget = Math.round(maxHR * 0.85);
+        
+          document.getElementById('hr-result').innerText =
+            `Target Heart Rate Zone: ${minTarget}–${maxTarget} bpm (50–85% of max HR)`;
+        }
+        </script>
+
+    <footer class="bg-dark text-light text-center py-3 mt-5 border-top">
+        <div class="container">
+            <small>
+            Created by <strong>Jordan Kelley</strong> · Version 1.0 · April 2025 · 
+            <a href="https://github.com/your-username/your-repo" class="text-info text-decoration-none" target="_blank">
+                Open Source on GitHub
+            </a>
+            </small>
+        </div>
+    </footer>   
+</body>
+</html>
