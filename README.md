@@ -35,9 +35,23 @@ Calc Daddy consists of three intuitive pages, each offering a different category
 ---
 
 ## 🐳 Running Locally
+### Prereqs
+- [Docker](https://www.docker.com/get-started/)
 
 1. **Clone the repository**
 
    ```bash
    git clone https://github.com/your-username/calc-daddy.git
    cd calc-daddy
+   ```
+2. **Build Docker Image**
+
+   ```bash
+   docker build -t calc-daddy .
+   ```
+
+3. **Run the container**
+
+   ```bash
+   docker run -p 8080:8080 calc-daddy
+   ```
