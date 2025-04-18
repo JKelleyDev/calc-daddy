@@ -6,21 +6,19 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<title>Calc-Daddy</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="p-4">
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-		<div class="container-fluid"> 
-			<a class="navbar-brand" href="/">Calc-Daddy</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-				<span class="navbar-toggler-icon"></span> 
-			</button>
+		<div class="container-fluid"> <a class="navbar-brand" href="/">Calc-Daddy</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"> <span class="navbar-toggler-icon"></span> </button>
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item"> <a class="nav-link active" href="/">Personal Finance</a> </li>
@@ -30,11 +28,8 @@
 			</div>
 		</div>
 	</nav>
-
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 	<div class="container mt-4">
-
 		<!-- Loan Payment Calculator -->
 		<div class="card shadow mb-4 rounded-3">
 			<div class="card-body">
@@ -48,7 +43,6 @@
 				<p class="mt-2" id="result1"></p>
 			</div>
 		</div>
-
 		<!-- Savings Growth Calculator -->
 		<div class="card shadow mb-4 rounded-3">
 			<div class="card-body">
@@ -63,27 +57,24 @@
 				<p class="mt-2" id="result2"></p>
 			</div>
 		</div>
-
 		<!-- 50/30/20 Monthly Budget Planner -->
 		<div class="card shadow mb-4 rounded-3">
 			<div class="card-body">
-			<h3 class="card-title">Monthly Budget Planner (50/30/20 Rule)</h3>
-			<form onsubmit="event.preventDefault(); calculateBudget();">
-				<input type="number" step="any" id="annualSalary" placeholder="Annual Salary ($)" class="form-control mb-2">
-				<input type="number" step="any" id="needsSpending" placeholder="Current Monthly Spending on Needs ($)" class="form-control mb-2">
-				<input type="number" step="any" id="wantsSpending" placeholder="Current Monthly Spending on Wants ($)" class="form-control mb-2">
-				<input type="number" step="any" id="savingsSpending" placeholder="Current Monthly Saving & Debt Repayment ($)" class="form-control mb-2">
-				<button type="submit" class="btn btn-primary">Analyze Budget</button>
-			</form>
-			<div class="mt-3" id="budgetResults"></div>
+				<h3 class="card-title">Monthly Budget Planner (50/30/20 Rule)</h3>
+				<form onsubmit="event.preventDefault(); calculateBudget();">
+					<input type="number" step="any" id="annualSalary" placeholder="Annual Salary ($)" class="form-control mb-2">
+					<input type="number" step="any" id="needsSpending" placeholder="Current Monthly Spending on Needs ($)" class="form-control mb-2">
+					<input type="number" step="any" id="wantsSpending" placeholder="Current Monthly Spending on Wants ($)" class="form-control mb-2">
+					<input type="number" step="any" id="savingsSpending" placeholder="Current Monthly Saving & Debt Repayment ($)" class="form-control mb-2">
+					<button type="submit" class="btn btn-primary">Analyze Budget</button>
+				</form>
+				<div class="mt-3" id="budgetResults"></div>
 				<div style="max-width: 300px; margin: 0 auto;">
 					<canvas id="budgetPieChart"></canvas>
-			 	 </div>
+				</div>
 			</div>
 		</div>
-
 	</div>
-
 	<script>
 	function formatCurrency(amount) {
 		return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -93,9 +84,7 @@
 		const P = parseFloat(document.getElementById('loanAmount').value);
 		const r = parseFloat(document.getElementById('annualRate').value) / 100 / 12;
 		const n = parseFloat(document.getElementById('loanTerm').value) * 12;
-
-		if (isNaN(P) || isNaN(r) || isNaN(n)) return;
-
+		if(isNaN(P) || isNaN(r) || isNaN(n)) return;
 		const payment = (P * r) / (1 - Math.pow(1 + r, -n));
 		document.getElementById('result1').innerText = `Monthly Payment: ${formatCurrency(payment)}`;
 	}
@@ -105,11 +94,9 @@
 		const monthly = parseFloat(document.getElementById('monthlyContribution').value);
 		const rate = parseFloat(document.getElementById('savingsRate').value) / 100 / 12;
 		const months = parseFloat(document.getElementById('savingsYears').value) * 12;
-
-		if (isNaN(principal) || isNaN(monthly) || isNaN(rate) || isNaN(months)) return;
-
+		if(isNaN(principal) || isNaN(monthly) || isNaN(rate) || isNaN(months)) return;
 		let futureValue = principal * Math.pow(1 + rate, months);
-		for (let i = 0; i < months; i++) {
+		for(let i = 0; i < months; i++) {
 			futureValue += monthly * Math.pow(1 + rate, months - i - 1);
 		}
 		document.getElementById('result2').innerText = `Future Savings: ${formatCurrency(futureValue)}`;
@@ -120,92 +107,79 @@
 		const needs = parseFloat(document.getElementById('needsSpending').value);
 		const wants = parseFloat(document.getElementById('wantsSpending').value);
 		const savings = parseFloat(document.getElementById('savingsSpending').value);
-
-		if (isNaN(annual) || isNaN(needs) || isNaN(wants) || isNaN(savings)) return;
-
+		if(isNaN(annual) || isNaN(needs) || isNaN(wants) || isNaN(savings)) return;
 		const monthlyIncome = annual / 12;
 		const recommended = {
-		needs: monthlyIncome * 0.5,
-		wants: monthlyIncome * 0.3,
-		savings: monthlyIncome * 0.2
+			needs: monthlyIncome * 0.5,
+			wants: monthlyIncome * 0.3,
+			savings: monthlyIncome * 0.2
 		};
-
-		const actual = { needs, wants, savings };
+		const actual = {
+			needs, wants, savings
+		};
 		const results = [];
-
 		let leftover = monthlyIncome - (needs + wants + savings);
-
 		['needs', 'wants', 'savings'].forEach(category => {
-		const delta = actual[category] - recommended[category];
-		const overUnder = delta > 0 ? 'Over' : 'Under';
-		const status = `${overUnder} by ${formatCurrency(Math.abs(delta))}`;
-
-		results.push(`
+			const delta = actual[category] - recommended[category];
+			const overUnder = delta > 0 ? 'Over' : 'Under';
+			const status = `${overUnder} by ${formatCurrency(Math.abs(delta))}`;
+			results.push(`
 			<div><strong>${category.charAt(0).toUpperCase() + category.slice(1)}</strong>: 
 			Spent ${formatCurrency(actual[category])}, Recommended ${formatCurrency(recommended[category])} 
 			→ <span class="${delta > 0 ? 'text-danger' : 'text-success'}">${status}</span>
 			</div>
 		`);
 		});
-
 		let suggestion = '';
-		if (leftover > 0) {
-		const priority = savings < recommended.savings ? 'Savings' : wants < recommended.wants ? 'Wants' : 'Needs';
-		suggestion = `<div class="mt-2"><strong>You have ${formatCurrency(leftover)} unallocated.</strong> 
+		if(leftover > 0) {
+			const priority = savings < recommended.savings ? 'Savings' : wants < recommended.wants ? 'Wants' : 'Needs';
+			suggestion = `<div class="mt-2"><strong>You have ${formatCurrency(leftover)} unallocated.</strong> 
 		Consider allocating more toward <strong>${priority}</strong>.</div>`;
 		}
-
 		document.getElementById('budgetResults').innerHTML = `
 		<p><strong>Monthly Income:</strong> ${formatCurrency(monthlyIncome)}</p>
 		${results.join('')}
 		${suggestion}
 		`;
-
 		// Destroy existing chart if needed
-		if (window.budgetChartInstance) {
-		window.budgetChartInstance.destroy();
+		if(window.budgetChartInstance) {
+			window.budgetChartInstance.destroy();
 		}
-
 		const ctx = document.getElementById('budgetPieChart').getContext('2d');
 		window.budgetChartInstance = new Chart(ctx, {
-		type: 'pie',
-		data: {
-			labels: ['Needs', 'Wants', 'Savings'],
-			datasets: [
-			{
-				label: 'Actual Spending',
-				data: [actual.needs, actual.wants, actual.savings],
-				backgroundColor: ['#0d6efd', '#6f42c1', '#198754'],
+			type: 'pie',
+			data: {
+				labels: ['Needs', 'Wants', 'Savings'],
+				datasets: [{
+					label: 'Actual Spending',
+					data: [actual.needs, actual.wants, actual.savings],
+					backgroundColor: ['#0d6efd', '#6f42c1', '#198754'],
+				}, {
+					label: 'Recommended (50/30/20)',
+					data: [recommended.needs, recommended.wants, recommended.savings],
+					backgroundColor: ['rgba(13,110,253,0.3)', 'rgba(111,66,193,0.3)', 'rgba(25,135,84,0.3)'],
+				}, ]
 			},
-			{
-				label: 'Recommended (50/30/20)',
-				data: [recommended.needs, recommended.wants, recommended.savings],
-				backgroundColor: ['rgba(13,110,253,0.3)', 'rgba(111,66,193,0.3)', 'rgba(25,135,84,0.3)'],
-			},
-			]
-		},
-		options: {
-			responsive: true,
-			plugins: {
-			title: {
-				display: true,
-				text: 'Budget Breakdown (Actual vs Recommended)'
+			options: {
+				responsive: true,
+				plugins: {
+					title: {
+						display: true,
+						text: 'Budget Breakdown (Actual vs Recommended)'
+					}
+				}
 			}
-			}
-		}
 		});
 	}
 	</script>
-
 	<footer class="bg-dark text-light text-center py-3 mt-5 border-top">
-		<div class="container">
-			<small>
-				Created by <strong>Jordan Kelley</strong> · Version 1.0 · April 2025 · 
+		<div class="container"> <small>
+				Created by <strong>Jordan Kelley</strong> · Version 2.0 · April 2025 · 
 				<a href="https://github.com/JKelleyDev/calc-daddy" class="text-info text-decoration-none" target="_blank">
 					Open Source on GitHub
 				</a>
-			</small>
-		</div>
+			</small> </div>
 	</footer>
 </body>
+
 </html>
