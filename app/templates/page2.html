@@ -1,144 +1,291 @@
 <!-- 
   Project: Calc-Daddy
   Author: Jordan Kelley
-  Version: 1.0 
+  Version: 2.0 
   License: MIT (see LICENSE file for details)
 -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
 	<title>Calc-Daddy</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-	<meta name="viewport" content="width=device-width, initial-scale=1"> </head>
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
 
 <body class="p-4">
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-		<div class="container-fluid"> <a class="navbar-brand" href="/">Calc-Daddy</a>
-			<!-- Toggler button-->
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
-			<!-- Add an ID to target it from the toggler -->
+		<div class="container-fluid"> 
+			<a class="navbar-brand" href="/">Calc-Daddy</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span> 
+			</button>
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<li class="nav-item"> <a class="nav-link {{ 'active' if request.path == '/' else '' }}" href="/">Basic</a> </li>
-					<li class="nav-item"> <a class="nav-link {{ 'active' if request.path == '/page2' else '' }}" href="/page2">Health</a> </li>
-					<li class="nav-item"> <a class="nav-link {{ 'active' if request.path == '/page3' else '' }}" href="/page3">Finance</a> </li>
+					<li class="nav-item"> <a class="nav-link" href="/">Personal Finance</a> </li>
+					<li class="nav-item"> <a class="nav-link active" href="/page2">Investing</a> </li>
+					<li class="nav-item"> <a class="nav-link" href="/page3">Real Estate</a> </li>
 				</ul>
 			</div>
 		</div>
 	</nav>
-	<!-- Powers the navbard dropdown for mobile-->
+
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 	<div class="container mt-4">
-		<div class="d-flex justify-content-end align-items-center mb-4">
-			<label class="form-check-label me-2" for="unitSwitch">Units:</label>
-			<div class="form-check form-switch">
-				<input class="form-check-input" type="checkbox" role="switch" id="unitSwitch" onchange="toggleUnits()">
-				<label class="form-check-label" id="unitLabel">Metric</label>
-			</div>
-		</div>
-		<!-- BMI Calculator -->
+
+		<!-- Compound Interest Calculator with Contributions + Chart -->
 		<div class="card shadow mb-4 rounded-3">
 			<div class="card-body">
-				<h3 class="card-title">BMI Calculator</h3>
-				<form onsubmit="event.preventDefault(); calculateBMI();">
-					<input type="number" id="weight" class="form-control mb-2" placeholder="Weight (kg)">
-					<input type="number" id="height" class="form-control mb-2" placeholder="Height (cm)">
+			<h3 class="card-title">Compound Interest Calculator</h3>
+			<form onsubmit="event.preventDefault(); calculateCompoundInterest();">
+				<input type="number" step="any" id="principalCI" placeholder="Initial Investment ($)" class="form-control mb-2">
+				<input type="number" step="any" id="contributionCI" placeholder="Monthly Contribution ($) — Optional" class="form-control mb-2">
+				<input type="number" step="any" id="rateCI" placeholder="Annual Interest Rate (%)" class="form-control mb-2">
+				<input type="number" step="any" id="yearsCI" placeholder="Years to Grow" class="form-control mb-2">
+				<input type="number" step="any" id="compoundFreq" value="12" placeholder="Compounding per Year (e.g. 12)" class="form-control mb-2">
+				<div class="form-check form-switch mb-2">
+				<input class="form-check-input" type="checkbox" id="ciToggle" onchange="calculateCompoundInterest()">
+				<label class="form-check-label" for="ciToggle">Yearly View</label>
+				</div>
+				<button type="submit" class="btn btn-primary">Calculate</button>
+			</form>
+			<p class="mt-2" id="result1"></p>
+			<canvas id="compoundChart" height="100"></canvas>
+			</div>
+		</div>
+  
+
+		<!-- Retirement Savings Goal Calculator -->
+		<div class="card shadow mb-4 rounded-3">
+			<div class="card-body">
+			<h3 class="card-title">Retirement Goal Calculator</h3>
+			<form onsubmit="event.preventDefault(); calculateRequiredContribution();">
+				<input type="number" step="any" id="yearsUntilRetire" placeholder="Years Until Retirement" class="form-control mb-2">
+				<input type="number" step="any" id="currentBalance" placeholder="Current Retirement Savings ($)" class="form-control mb-2">
+				<input type="number" step="any" id="annualReturnSaving" placeholder="Annual Return While Saving (%)" class="form-control mb-2">
+				<input type="number" step="any" id="annualReturnRetired" placeholder="Annual Return During Retirement (%)" class="form-control mb-2">
+				<input type="number" step="any" id="monthlyIncome" placeholder="Desired Monthly Income at Retirement ($)" class="form-control mb-2">
+				<input type="number" step="any" id="retirementYears" placeholder="Years Retirement Should Last" class="form-control mb-2">
+				<button type="submit" class="btn btn-primary">Calculate</button>
+			</form>
+			<p class="mt-3" id="result2"></p>
+			<canvas id="retirementChart" height="180"></canvas>
+		</div>
+  
+
+		<!-- ROI Calculator -->
+		<div class="card shadow mb-4 rounded-3">
+			<div class="card-body">
+				<h3 class="card-title">Return on Investment (ROI) Calculator</h3>
+				<form onsubmit="event.preventDefault(); calculateROI();">
+					<input type="number" step="any" id="gain" placeholder="Total Return ($)" class="form-control mb-2">
+					<input type="number" step="any" id="cost" placeholder="Investment Cost ($)" class="form-control mb-2">
 					<button type="submit" class="btn btn-primary">Calculate</button>
 				</form>
-				<p class="mt-2" id="bmi-result"></p>
+				<p class="mt-2" id="result3"></p>
 			</div>
 		</div>
-		<!-- Calorie Needs Calculator -->
-		<div class="card shadow mb-4 rounded-3">
-			<div class="card-body">
-				<h3 class="card-title">Calorie Needs (BMR)</h3>
-				<form onsubmit="event.preventDefault(); calculateBMR();">
-					<input type="number" id="bmr-weight" class="form-control mb-2" placeholder="Weight (kg)">
-					<input type="number" id="bmr-height" class="form-control mb-2" placeholder="Height (cm)">
-					<input type="number" id="bmr-age" class="form-control mb-2" placeholder="Age">
-					<select id="bmr-gender" class="form-select mb-2">
-						<option value="male">Male</option>
-						<option value="female">Female</option>
-					</select>
-					<button type="submit" class="btn btn-primary">Estimate</button>
-				</form>
-				<p class="mt-2" id="bmr-result"></p>
-			</div>
-		</div>
-		<!-- Heart Rate Zone Calculator -->
-		<div class="card shadow mb-4 rounded-3">
-			<div class="card-body">
-				<h3 class="card-title">Target Heart Rate Zone</h3>
-				<form onsubmit="event.preventDefault(); calculateHeartRate();">
-					<input type="number" id="age" class="form-control mb-2" placeholder="Age">
-					<button type="submit" class="btn btn-primary">Calculate</button>
-				</form>
-				<p class="mt-2" id="hr-result"></p>
-			</div>
-		</div>
+
 	</div>
+
 	<script>
-	let usingMetric = true;
-
-	function toggleUnits() {
-		usingMetric = !usingMetric;
-		document.getElementById('unitLabel').innerText = usingMetric ? "Metric" : "Imperial";
-		// Update placeholders
-		document.getElementById('weight').placeholder = usingMetric ? "Weight (kg)" : "Weight (lbs)";
-		document.getElementById('height').placeholder = usingMetric ? "Height (cm)" : "Height (inches)";
-		document.getElementById('bmr-weight').placeholder = usingMetric ? "Weight (kg)" : "Weight (lbs)";
-		document.getElementById('bmr-height').placeholder = usingMetric ? "Height (cm)" : "Height (inches)";
+	let compoundChartInstance;
+	function formatCurrency(amount) {
+		return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 	}
 
-	function calculateBMI() {
-		const weightInput = parseFloat(document.getElementById('weight').value);
-		const heightInput = parseFloat(document.getElementById('height').value);
-		if(usingMetric) {
-			const heightMeters = heightInput / 100;
-			const bmi = weightInput / (heightMeters * heightMeters);
-			document.getElementById('bmi-result').innerText = `Your BMI is: ${bmi.toFixed(2)}`;
-		} else {
-			// Imperial: height in inches, weight in lbs
-			const bmi = (weightInput / (heightInput * heightInput)) * 703;
-			document.getElementById('bmi-result').innerText = `Your BMI is: ${bmi.toFixed(2)}`;
+	function calculateCompoundInterest() {
+		const P = parseFloat(document.getElementById('principalCI').value);
+		const PMT = parseFloat(document.getElementById('contributionCI').value) || 0;
+		const r = parseFloat(document.getElementById('rateCI').value) / 100;
+		const t = parseFloat(document.getElementById('yearsCI').value);
+		const n = parseFloat(document.getElementById('compoundFreq').value) || 12;
+
+		if (isNaN(P) || isNaN(r) || isNaN(t) || isNaN(n)) return;
+
+		const isYearly = document.getElementById('ciToggle').checked;
+		const steps = isYearly ? t : t * n;
+		const interval = isYearly ? 1 : 1 / n;
+
+		const labels = [];
+		const data = [];
+
+		let total = P;
+
+		for (let i = 0; i <= steps; i++) {
+			const currentTime = i * interval;
+			total = P * Math.pow(1 + r / n, n * currentTime);
+
+			// Add contributions over time
+			for (let j = 0; j < currentTime * n; j++) {
+			total += PMT * Math.pow(1 + r / n, (n * currentTime) - j - 1);
+			}
+
+			const label = isYearly ? `Year ${Math.floor(currentTime)}` : `Period ${i}`;
+			labels.push(label);
+			data.push(total);
 		}
-	}
 
-	function calculateBMR() {
-		const weightInput = parseFloat(document.getElementById('bmr-weight').value);
-		const heightInput = parseFloat(document.getElementById('bmr-height').value);
-		const age = parseInt(document.getElementById('bmr-age').value);
-		const gender = document.getElementById('bmr-gender').value;
-		// Convert to metric if needed
-		const weightKg = usingMetric ? weightInput : weightInput * 0.453592;
-		const heightCm = usingMetric ? heightInput : heightInput * 2.54;
-		let bmr;
-		if(gender === 'male') {
-			bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
-		} else {
-			bmr = 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
+		const finalAmount = data[data.length - 1];
+		document.getElementById('result1').innerText = `Final Value: ${formatCurrency(finalAmount)}`;
+
+
+
+		if (compoundChartInstance) {
+			compoundChartInstance.destroy();
 		}
-		document.getElementById('bmr-result').innerText = `Your estimated BMR is: ${Math.round(bmr)} calories/day`;
+
+		const ctx = document.getElementById('compoundChart').getContext('2d');
+		compoundChartInstance = new Chart(ctx, {
+			type: 'line',
+			data: {
+			labels: labels,
+			datasets: [{
+				label: 'Investment Growth',
+				data: data,
+				borderColor: 'purple',
+				backgroundColor: 'rgba(128, 0, 128, 0.1)',
+				fill: true,
+			}]
+			},
+			options: {
+			responsive: true,
+			plugins: {
+				legend: { position: 'top' },
+				title: {
+				display: true,
+				text: `Compound Growth Over Time (${isYearly ? 'Yearly' : 'Full Periods'})`,
+				},
+			},
+			scales: {
+				y: {
+				beginAtZero: true,
+				title: { display: true, text: 'Value ($)' }
+				}
+			}
+			}
+		});
 	}
 
-	function calculateHeartRate() {
-		const age = parseInt(document.getElementById('age').value);
-		const maxHR = 220 - age;
-		const minTarget = Math.round(maxHR * 0.5);
-		const maxTarget = Math.round(maxHR * 0.85);
-		document.getElementById('hr-result').innerText = `Target Heart Rate Zone: ${minTarget}–${maxTarget} bpm (50–85% of max HR)`;
+	let retirementChartInstance;
+
+	function calculateRequiredContribution() {
+		const yearsUntilRetire = parseFloat(document.getElementById('yearsUntilRetire').value);
+		const currentBalance = parseFloat(document.getElementById('currentBalance').value);
+		const annualReturnSaving = parseFloat(document.getElementById('annualReturnSaving').value) / 100;
+		const annualReturnRetired = parseFloat(document.getElementById('annualReturnRetired').value) / 100;
+		const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value);
+		const retirementYears = parseFloat(document.getElementById('retirementYears').value);
+
+		if (
+			isNaN(yearsUntilRetire) || isNaN(currentBalance) ||
+			isNaN(annualReturnSaving) || isNaN(annualReturnRetired) ||
+			isNaN(monthlyIncome) || isNaN(retirementYears)
+		) return;
+
+		const savingMonths = yearsUntilRetire * 12;
+		const retirementMonths = retirementYears * 12;
+		const savingRate = annualReturnSaving / 12;
+		const retirementRate = annualReturnRetired / 12;
+
+		// Step 1: Calculate nest egg needed at retirement
+		const nestEggNeeded = monthlyIncome * ((1 - Math.pow(1 + retirementRate, -retirementMonths)) / retirementRate);
+
+		// Step 2: Required monthly contribution
+		const futureValueOfCurrent = currentBalance * Math.pow(1 + savingRate, savingMonths);
+		const contributionNeeded = (nestEggNeeded - futureValueOfCurrent) * savingRate / (Math.pow(1 + savingRate, savingMonths) - 1);
+
+		document.getElementById('result2').innerHTML = `
+			<strong>Target Nest Egg at Retirement:</strong> ${formatCurrency(nestEggNeeded)}<br>
+			<strong>Required Monthly Contribution:</strong> ${formatCurrency(contributionNeeded)}<br>
+			To withdraw <strong>${formatCurrency(monthlyIncome)}</strong> per month for <strong>${retirementYears} years</strong>.
+		`;
+
+		// Step 3: Build savings growth data for chart
+		let balance = currentBalance;
+		const labels = [];
+		const data = [];
+
+		for (let i = 1; i <= yearsUntilRetire; i++) {
+			for (let m = 0; m < 12; m++) {
+			const interest = balance * savingRate;
+			balance += interest + contributionNeeded;
+			}
+			labels.push(`Year ${i}`);
+			data.push(balance);
+		}
+
+		// Destroy existing chart if exists
+		if (retirementChartInstance) retirementChartInstance.destroy();
+
+		const ctx = document.getElementById('retirementChart').getContext('2d');
+		retirementChartInstance = new Chart(ctx, {
+			type: 'line',
+			data: {
+			labels: labels,
+			datasets: [
+				{
+				label: 'Projected Savings Over Time',
+				data: data,
+				borderColor: '#198754',
+				backgroundColor: 'rgba(25, 135, 84, 0.2)',
+				fill: true
+				},
+				{
+				label: 'Target Nest Egg',
+				data: Array(labels.length).fill(nestEggNeeded),
+				borderColor: 'rgba(255,99,132,1)',
+				borderDash: [5, 5],
+				pointRadius: 0,
+				fill: false
+				}
+			]
+			},
+			options: {
+			responsive: true,
+			plugins: {
+				title: {
+				display: true,
+				text: 'Retirement Savings Trajectory'
+				},
+				legend: {
+				position: 'top'
+				}
+			},
+			scales: {
+				y: {
+				title: {
+					display: true,
+					text: 'Balance ($)'
+				}
+				}
+			}
+			}
+		});
+	}
+
+	function calculateROI() {
+		const gain = parseFloat(document.getElementById('gain').value);
+		const cost = parseFloat(document.getElementById('cost').value);
+
+		if (isNaN(gain) || isNaN(cost) || cost === 0) return;
+
+		const roi = ((gain - cost) / cost) * 100;
+		document.getElementById('result3').innerText = `ROI: ${roi.toFixed(2)}%`;
 	}
 	</script>
+
 	<footer class="bg-dark text-light text-center py-3 mt-5 border-top">
-		<div class="container"> <small>
-            Created by <strong>Jordan Kelley</strong> · Version 1.0 · April 2025 · 
-            <a href="https://github.com/JKelleyDev/calc-daddy" class="text-info text-decoration-none" target="_blank">
-                Open Source on GitHub
-            </a>
-            </small> </div>
+		<div class="container">
+			<small>
+				Created by <strong>Jordan Kelley</strong> · Version 1.0 · April 2025 · 
+				<a href="https://github.com/JKelleyDev/calc-daddy" class="text-info text-decoration-none" target="_blank">
+					Open Source on GitHub
+				</a>
+			</small>
+		</div>
 	</footer>
 </body>
-
 </html>
