@@ -12,17 +12,54 @@
 
 Calc Daddy consists of three intuitive pages, each offering a different category of calculators:
 
-### 1️⃣ Basic Calculators
-- Perform standard arithmetic operations (addition, subtraction, multiplication, division)
-- Clean UI and mobile-friendly layout
+### 1️⃣ Personal Finance Calculators
 
-### 2️⃣ Health Calculators
-- Includes BMI and BMR calculators
-- Toggle between **Imperial** and **Metric** units
 
-### 3️⃣ Financial Calculators
-- Currency conversion and budgeting tools
-- Switch between **USD**, **MXN**, **PHP**, **GBP**, and **EUR**
+### 2️⃣ Investing Calculators
+
+
+### 3️⃣ Real Estate Calculators
+
+---
+
+## 📐 Formulas Used
+
+### 1. Loan Payment Calculator
+**Formula**:  
+PMT = P * r / (1 - (1 + r)^-n)  
+Where:  
+- `P` = Loan amount  
+- `r` = Monthly interest rate  
+- `n` = Total number of payments
+
+---
+
+### 2. Compound Interest Calculator
+**Formula with contributions**:  
+FV = P * (1 + r/n)^(nt) + PMT × [((1 + r/n)^(nt) - 1) / (r/n)]  
+- `P` = Initial principal  
+- `PMT` = Monthly contribution  
+- `r` = Annual interest rate  
+- `n` = Compounding frequency  
+- `t` = Time in years
+
+---
+
+### 3. ROI Calculator  
+**Formula**:  
+ROI = (Gain - Cost) / Cost × 100%
+
+---
+
+### 4. Retirement Goal Calculator  
+**Retirement Nest Egg Needed**:  
+FV = PMT × [(1 - (1 + r)^-n) / r]  
+**Required Monthly Contribution**:  
+PMT = [FV - P(1 + r)^n] × r / ((1 + r)^n - 1)
+
+---
+
+
 
 ---
 
