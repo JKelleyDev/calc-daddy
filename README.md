@@ -67,7 +67,20 @@ Where:
   - Savings: 20%
 - Compares actual input spending per category and shows over/under-budget
 - Suggests where to allocate extra funds based on current shortfalls
-  
+
+---
+### 4. 📈 **Compound Interest Calculator**
+**Formula (with contributions and compound frequency):**
+
+FV = P × (1 + r/n)^(nt) + PMT × Σ[(1 + r/n)^i for i = 0 to nt-1]
+
+Where:
+- `P` = Initial investment  
+- `PMT` = Monthly contribution  
+- `r` = Annual interest rate  
+- `n` = Compounding frequency (e.g., 12 = monthly)  
+- `t` = Time in years  
+
 ---
 
 ### 5. 🧓 **Retirement Goal Calculator**
