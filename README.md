@@ -31,46 +31,75 @@ Calc Daddy consists of three intuitive pages, each offering a different category
 
 ---
 
-## 📐 Formulas Used
+## 📐 Calculation Methods & Forumlas 
 
 ### 1. Loan Payment Calculator
-**Formula**:  
-PMT = P * r / (1 - (1 + r)^-n)  
+**Formula:** 
+PMT = (P * r) / (1 - (1 + r)^-n)  
 Where:  
+- `PMT` = Monthly payment
 - `P` = Loan amount  
 - `r` = Monthly interest rate  
 - `n` = Total number of payments
 
 ---
 
-### 2. Compound Interest Calculator
-**Formula with contributions**:  
-FV = P * (1 + r/n)^(nt) + PMT × [((1 + r/n)^(nt) - 1) / (r/n)]  
-- `P` = Initial principal  
+### 2. 💰 **Savings Growth Calculator**
+
+**Formula (with monthly contributions):**
+FV = P × (1 + r)^n + PMT × ((1 + r)^n - 1) / r
+Where:
+- `FV` = Future value  
+- `P` = Initial savings  
 - `PMT` = Monthly contribution  
-- `r` = Annual interest rate  
-- `n` = Compounding frequency  
-- `t` = Time in years
+- `r` = Monthly interest rate  
+- `n` = Number of months  
+
+---
+### 3. 📊 **Monthly Budget Planner (50/30/20)**
+
+**Method:**
+
+- Uses **monthly income** (annual salary ÷ 12)
+- Breaks spending into:
+  - Needs: 50%
+  - Wants: 30%
+  - Savings: 20%
+- Compares actual input spending per category and shows over/under-budget
+- Suggests where to allocate extra funds based on current shortfalls
+  
+---
+
+### 5. 🧓 **Retirement Goal Calculator**
+
+**Nest Egg Needed:**
+
+FV = PMT × ((1 - (1 + r)^-n) / r)
+
+Where:
+- `PMT` = Desired monthly income  
+- `r` = Monthly return during retirement  
+- `n` = Retirement duration in months
+
+**Required Monthly Contribution:**
+PMT = (FV - PV × (1 + r)^n) × r / ((1 + r)^n - 1)
+
+Where:
+- `FV` = Nest egg needed  
+- `PV` = Current retirement savings  
+- `r` = Monthly return while saving  
+- `n` = Months until retirement  
 
 ---
 
-### 3. ROI Calculator  
-**Formula**:  
-ROI = (Gain - Cost) / Cost × 100%
+### 6. 📉 **ROI Calculator**
+
+**Formula:**
+
+ROI = ((Gain - Cost) / Cost) × 100
 
 ---
 
-### 4. Retirement Goal Calculator  
-**Retirement Nest Egg Needed**:  
-FV = PMT × [(1 - (1 + r)^-n) / r]  
-**Required Monthly Contribution**:  
-PMT = [FV - P(1 + r)^n] × r / ((1 + r)^n - 1)
-
----
-
-
-
----
 
 ## 🛠️ Tech Stack
 
